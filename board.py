@@ -1,5 +1,18 @@
-N, M = 8, 8
-board = [[0 for _ in range(N)] for _ in range(M)]
+from GameEl import canon
 
-for line in board:
-    print(*line)
+
+def get_board(width, height: int) -> list[list]:
+    return [[canon() for _ in range(width)] for _ in range(height)]
+
+
+def print_board(board: list[list], t: str = "consolePresent"):
+    for line in board:
+        for element in line:
+            print(element[t], end=" ")
+        print()
+
+
+if __name__ == "__main__":
+    print_board(get_board(8, 8))
+
+
