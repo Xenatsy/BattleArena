@@ -7,12 +7,10 @@ Let a base game element haves parameters:
         1.1. leftover moves
     4. Console present
     5. GUI present
-
-
 """
 
 
-def get_element(health=1, damage=1, move_speed=1, console=" ", graph="") -> dict:
+def create_element(health=1, damage=1, move_speed=1, console=" ", graph="") -> dict:
     return {
         "health": health,
         "currentHealth": health,
@@ -22,6 +20,11 @@ def get_element(health=1, damage=1, move_speed=1, console=" ", graph="") -> dict
         "consolePresent": console,
         "GUIPresent": graph
     }
+
+
+def fight(element1: dict, element2: dict):
+    element1["currentHealth"] -= element2["damage"]
+    element2["currentHealth"] -= element1["damage"]
 
 
 if __name__ == "__main__":

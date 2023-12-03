@@ -1,8 +1,8 @@
-from GameEl import get_element
+from GameEl import create_element
 
 
 def get_board(width, height: int) -> list[list]:
-    return [[get_element() for _ in range(width)] for _ in range(height)]
+    return [[create_element() for _ in range(width)] for _ in range(height)]
 
 
 def print_board(board: list[list], t: str = "consolePresent"):
@@ -25,6 +25,4 @@ def distance(x1: int, y1: int, x2: int, y2: int) -> int:
 
 
 if __name__ == "__main__":
-    print(distance(0,0,1,1))
-
-
+    print(distance(0, 0, 1, 1))
