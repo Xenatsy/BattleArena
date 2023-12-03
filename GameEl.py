@@ -12,7 +12,7 @@ Let a base game element haves parameters:
 """
 
 
-def canon(health=1, damage=1, move_speed=1, console="u", graph="") -> dict:
+def get_element(health=1, damage=1, move_speed=1, console=" ", graph="") -> dict:
     return {
         "health": health,
         "currentHealth": health,
