@@ -29,4 +29,3 @@ def fight(element1: dict, element2: dict):
 
 if __name__ == "__main__":
     pass
-
