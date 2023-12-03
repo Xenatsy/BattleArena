@@ -7,7 +7,7 @@ def get_board(width, height: int) -> list[list]:
 
 def print_board(board: list[list], t: str = "consolePresent"):
     for _ in board[0]:
-        print("--", end="")
+        print(end="--")
     print("-")
     for line in board:
         print(end="|")
@@ -15,7 +15,7 @@ def print_board(board: list[list], t: str = "consolePresent"):
             print(element[t], end="|")
         print()
         for _ in line:
-            print("--", end="")
+            print(end="--")
         print("-")
     print()
  
