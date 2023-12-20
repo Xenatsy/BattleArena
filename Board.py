@@ -37,7 +37,7 @@ def distance(x1: int, y1: int, x2: int, y2: int) -> int:
 
 
 if __name__ == "__main__":
-    game_board = get_board(3, 3)
+    game_board = get_board(8, 8)
     # set_element(game_board, create_element(1, 1, 1, "p"), 0, 0)
     print_board(game_board)
     # delete_element(game_board, 0, 0)
