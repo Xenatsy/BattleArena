@@ -1,9 +1,7 @@
 import tkinter
-import
-
+import PIL
 from itertools import product
 from random import choice
-
 
 # def handle(event):
 #     window.update()
