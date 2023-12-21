@@ -71,18 +71,14 @@ class Board:
     def get_element(self, x: int, y: int) -> Unit:
         return self.board[y][x]
 
+    def delete_element(self, x: int, y: int):
+        self.board[y][x] = Unit()
+
+    @staticmethod
+    def distance(x1: int, y1: int, x2: int, y2: int) -> int:
+        return abs(x1 - x2) + abs(y1 - y2)
 
 ###
-def delete_element(board: list[list[Unit]], x: int, y: int):
-    board[y][x] = Unit()
-
-
-def distance(x1: int, y1: int, x2: int, y2: int) -> int:
-    return abs(x1 - x2) + abs(y1 - y2)
-
-
-###
-
 
 def draw_board(board: Board):
     global resized_white_tk
@@ -106,8 +102,6 @@ def draw_board(board: Board):
 def handle(event: tkinter.Event):
     global resized_white_tk, resized_red_tk, resized_green_tk
     x0 = min(window.winfo_width(), window.winfo_height()) // 2
-    if int(event.type) != 22:
-        tag = canvas.gettags("current")[0]
     w, h = resized_white_tk.width(), resized_white_tk.height()
     new_resized_red = red.resize((w, h))
     resized_red_tk = ImageTk.PhotoImage(new_resized_red)
@@ -115,8 +109,10 @@ def handle(event: tkinter.Event):
     resized_green_tk = ImageTk.PhotoImage(new_resized_green)
     match int(event.type):
         case 4:  # print("Нажато")
+            tag = canvas.gettags("current")[0]
             canvas.itemconfigure(tag.replace("unit", "cell"), image=resized_green_tk)
         case 7:  # print("Наведено")
+            tag = canvas.gettags("current")[0]
             canvas.itemconfig(tag.replace("unit", "cell"), image=resized_red_tk)
             for x, y in product(range(board1.width), range(board1.height)):
                 d = board1.get_element(x, y)
@@ -129,6 +125,7 @@ def handle(event: tkinter.Event):
                                       )
 
         case 8:  # print("Отведено")
+            tag = canvas.gettags("current")[0]
             canvas.itemconfigure(tag.replace("unit", "cell"), image=resized_white_tk)
             canvas.itemconfig("statistic", text="")
 
@@ -155,16 +152,16 @@ if __name__ == "__main__":
     units = []
     for side in (1, 2):
         for _ in range(5):
-            h = randint(1, 300)
+            health = randint(1, 300)
             v = randint(1, 3)
             unit = Unit(
-                health=h,
+                health=health,
                 damage=randint(1, 30),
                 move_speed=v,
                 console=["B", "W"][side - 1],
                 team=["#00F", "#FF0"][side - 1],
                 type="unit",
-                current_health=h,
+                current_health=health,
                 leftoverMoves=v
             )
             print(unit.current_health)
