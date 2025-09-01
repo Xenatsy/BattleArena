@@ -289,13 +289,13 @@ class Cell {
             ctx.fillStyle = "black";
             ctx.fillText(
                 `❤️${this.figure.health}`,
-                (this.x * size + offsetX + (size - 5) / 5),
-                (this.y * size + offsetY + (size - 5) / 3),
+                this.x * size + offsetX,
+                this.y * size + offsetY + size/2,
             )
             ctx.fillText(
                 `🗡️${this.figure.damage}`,
-                (this.x * size + offsetX + (size - 5) / 5),
-                (this.y * size + offsetY + 2 * (size - 5) / 3),
+                this.x * size + offsetX + size/2,
+                this.y * size + offsetY + size/2,
             )
 
         }
@@ -318,24 +318,24 @@ function draw() {
     board.forEach(element => {
         element.draw(offsetX, offsetY);
     });
-    let isIncluded = [start.x, start.y, end.x, end.y].includes(-1);
-    let isEqualStartEnd = start.x == end.x && start.y == end.y;
-    let isEqualStartMouse = start.x == mouse.x && start.y == mouse.y;
+    // let isIncluded = [start.x, start.y, end.x, end.y].includes(-1);
+    // let isEqualStartEnd = start.x == end.x && start.y == end.y;
+    // let isEqualStartMouse = start.x == mouse.x && start.y == mouse.y;
 
-    ctx.strokeStyle = "green";
-    if (!(isIncluded || isEqualStartEnd)) {
-        canvas_arrow(start.x, start.y, end.x, end.y);
+    // ctx.strokeStyle = "green";
+    // if (!(isIncluded || isEqualStartEnd)) {
+    //     canvas_arrow(start.x, start.y, end.x, end.y);
 
-    }
-    if (mouseState == "chosen") {
-        if (!isEqualStartMouse) {
-            canvas_arrow(start.x, start.y, mouse.x, mouse.y);
-        }
-    }
-    ctx.fillStyle = "black";
-    ctx.font = "50px consolas";
-    ctx.fillText(mouseState, 0, canvas.height - 100);
-    ctx.fillText(`(${from.x};${from.y}) -> (${to.x};${to.y})`, 0, canvas.height - 50);
+    // }
+    // if (mouseState == "chosen") {
+    //     if (!isEqualStartMouse) {
+    //         canvas_arrow(start.x, start.y, mouse.x, mouse.y);
+    //     }
+    // }
+    // ctx.fillStyle = "black";
+    // ctx.font = "50px consolas";
+    // ctx.fillText(mouseState, 0, canvas.height - 100);
+    // ctx.fillText(`(${from.x};${from.y}) -> (${to.x};${to.y})`, 0, canvas.height - 50);
 
 }
 function init() {
