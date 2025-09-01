@@ -1,5 +1,34 @@
 const canvas = document.getElementsByTagName("canvas")[0];
 const ctx = canvas.getContext("2d");
+
+canvas.style.cursor = "pointer";
+canvas.style.touchAction = "none";
+function handleClick(x, y) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const x = (x - rect.left) * scaleX;
+    const y = (y - rect.left) * scaleY;
+
+    mouseDown(new MouseEvent("click", x = x, y = y));
+}
+
+canvas.addEventListener("click", (e) => {
+    e.preventDefault();
+    handleClick(e.clientX, e.clientY);
+})
+
+canvas.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    if (e.touches.length === 1) {
+        handleClick(e.touches[0].clientX, e.touches[0].clientY);
+    }
+}, { passive: false });
+
+canvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+}, { passive: false });
+
 let size = 0;
 let board = [];
 let offsetX = 5 * size / 2 + canvas.width / 2;
@@ -70,9 +99,9 @@ function mouseDown(event) {
                     to.y = element.y;
                     end.y = element.y * size + size / 2 + offsetY;
 
-                    let condition = from.x == to.x && from.y == to.y;
+                    let equalCondition = from.x == to.x && from.y == to.y;
 
-                    if (!condition) {
+                    if (!equalCondition) {
                         if (distance(from.x, from.y, to.x, to.y) == 1) {
                             // Правильный расчет индексов
                             let fromIndex = from.x * 5 + from.y;
@@ -131,11 +160,16 @@ function AITurn() {
             let x = Math.floor(index / 5); // Получаем x из индекса
             let y = index % 5; // Получаем y из индекса
 
-            // Проверяем всех соседей
+            // Проверяем всех соседей (комментированные соседи расположены выше)
             const neighbors = [
-                { x: x - 1, y: y - 1 }, { x: x - 1, y: y }, { x: x - 1, y: y + 1 },
-                { x: x, y: y - 1 }, { x: x, y: y + 1 },
-                { x: x + 1, y: y - 1 }, { x: x + 1, y: y }, { x: x + 1, y: y + 1 }
+                // { x: x - 1, y: y - 1 }, 
+                { x: x - 1, y: y },
+                { x: x - 1, y: y + 1 },
+                //  { x: x, y: y - 1 }, 
+                { x: x, y: y + 1 },
+                // { x: x + 1, y: y - 1 }, 
+                { x: x + 1, y: y },
+                { x: x + 1, y: y + 1 }
             ];
 
             neighbors.forEach(neighbor => {
@@ -149,11 +183,11 @@ function AITurn() {
                             });
                         }
                     }
-                    else{
+                    else {
                         possibleMoves.push({
                             from: index,
                             to: neighborIndex,
-                        });   
+                        });
 
                     }
                 }
@@ -172,7 +206,6 @@ function AITurn() {
     }
     else if (possibleMoves.length > 0) {
         let possibleMove = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
-        let toF = board[possibleMove.to].figure;
         let fromF = board[possibleMove.from].figure;
         board[possibleMove.to].figure = fromF;
         board[possibleMove.from].figure = null;
