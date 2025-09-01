@@ -1,6 +1,7 @@
 const canvas = document.getElementsByTagName("canvas")[0];
 const ctx = canvas.getContext("2d");
 
+
 canvas.style.cursor = "pointer";
 canvas.style.touchAction = "none";
 function handleClick(x, y) {
@@ -29,7 +30,9 @@ canvas.addEventListener('touchmove', (e) => {
     e.preventDefault();
 }, { passive: false });
 
+let isOver = false;
 let size = 0;
+
 let board = [];
 let offsetX = 5 * size / 2 + canvas.width / 2;
 let offsetY = 5 * size / 2 + canvas.height / 2;
@@ -59,19 +62,19 @@ function mouseMove(event) {
     draw();
 }
 
-function canvas_arrow(fromx, fromy, tox, toy) {
-    var headlen = 10;
-    var dx = tox - fromx;
-    var dy = toy - fromy;
-    var angle = Math.atan2(dy, dx);
-    ctx.beginPath();
-    ctx.moveTo(fromx, fromy);
-    ctx.lineTo(tox, toy);
-    ctx.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
-    ctx.moveTo(tox, toy);
-    ctx.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
-    ctx.stroke();
+function isWin() {
+    for (const element of board) {
+        if (element.figure) {
+            console.log(element.figure.team);
+            if (element.figure.team == "blue") {
+                return false;
+            }
+        }
+
+    }
+    return true;
 }
+
 
 function mouseDown(x = null, y = null, event = null) {
     let mouseX;
@@ -95,6 +98,8 @@ function mouseDown(x = null, y = null, event = null) {
                     end = { x: -1, y: -1 };
                     if (element.figure && element.figure.team == "yellow") {
                         mouseState = "chosen";
+
+                        element.isSelected = true;
                         from.x = element.x;
                         start.x = element.x * size + size / 2 + offsetX;
                         from.y = element.y;
@@ -103,6 +108,7 @@ function mouseDown(x = null, y = null, event = null) {
                     break;
                 }
                 case "chosen": {
+                    element.isSelected = false;
                     to.x = element.x;
                     end.x = element.x * size + size / 2 + offsetX;
                     to.y = element.y;
@@ -126,6 +132,7 @@ function mouseDown(x = null, y = null, event = null) {
                                         board[fromIndex].figure = null;
                                         mouseState = "empty";
                                     }
+
                                     AITurn();
 
                                 }
@@ -265,6 +272,8 @@ class Cell {
 
         this.figure = figure;
 
+        this.isSelected = false;
+
     }
     draw(offsetX, offsetY) {
         const size = this.size;
@@ -275,27 +284,30 @@ class Cell {
         ctx.fillRect(this.x * size + offsetX, this.y * size + offsetY, size - 5, size - 5);
 
         if (this.figure) {
-            ctx.strokeStyle = this.figure.team;
+            ctx.strokeStyle = this.isSelected ? "red" : this.figure.team;
             ctx.fillStyle = this.figure.team;
+
             ctx.beginPath();
             ctx.arc(
                 (2 * this.x * size + 2 * offsetX + size - 5) / 2,
                 (2 * this.y * size + 2 * offsetY + size - 5) / 2,
-                (size - 5) / 2,
-                0, 2 * Math.PI);
+                (size - 5) / 2 - 5,
+                0, 2 * Math.PI
+            );
+
             ctx.fill();
             ctx.stroke();
-            ctx.font = `${size / 5}px consolas`;
             ctx.fillStyle = "black";
+            ctx.font = `${size / 5}px consolas`;
             ctx.fillText(
                 `❤️${this.figure.health}`,
                 this.x * size + offsetX,
-                this.y * size + offsetY + size/2,
+                this.y * size + offsetY + size / 2,
             )
             ctx.fillText(
                 `🗡️${this.figure.damage}`,
-                this.x * size + offsetX + size/2,
-                this.y * size + offsetY + size/2,
+                this.x * size + offsetX + size / 2,
+                this.y * size + offsetY + size / 2,
             )
 
         }
@@ -318,25 +330,16 @@ function draw() {
     board.forEach(element => {
         element.draw(offsetX, offsetY);
     });
-    // let isIncluded = [start.x, start.y, end.x, end.y].includes(-1);
-    // let isEqualStartEnd = start.x == end.x && start.y == end.y;
-    // let isEqualStartMouse = start.x == mouse.x && start.y == mouse.y;
 
-    // ctx.strokeStyle = "green";
-    // if (!(isIncluded || isEqualStartEnd)) {
-    //     canvas_arrow(start.x, start.y, end.x, end.y);
-
-    // }
-    // if (mouseState == "chosen") {
-    //     if (!isEqualStartMouse) {
-    //         canvas_arrow(start.x, start.y, mouse.x, mouse.y);
-    //     }
-    // }
-    // ctx.fillStyle = "black";
-    // ctx.font = "50px consolas";
-    // ctx.fillText(mouseState, 0, canvas.height - 100);
-    // ctx.fillText(`(${from.x};${from.y}) -> (${to.x};${to.y})`, 0, canvas.height - 50);
-
+    if (isWin()) {
+        ctx.fillStyle = "white";
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "black";
+        const text = "You won!";
+        const metrics = ctx.measureText(text);
+        const actualX = canvas.width / 2 - metrics.width / 2;
+        ctx.fillText(text, actualX, canvas.height / 2);
+    }
 }
 function init() {
     onResize();
