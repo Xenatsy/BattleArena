@@ -7,10 +7,10 @@ function handleClick(x, y) {
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
-    const x = (x - rect.left) * scaleX;
-    const y = (y - rect.left) * scaleY;
+    x = (x - rect.left) * scaleX;
+    y = (y - rect.left) * scaleY;
 
-    mouseDown(new MouseEvent("click", x = x, y = y));
+    mouseDown(x, y);
 }
 
 canvas.addEventListener("click", (e) => {
@@ -73,10 +73,19 @@ function canvas_arrow(fromx, fromy, tox, toy) {
     ctx.stroke();
 }
 
-function mouseDown(event) {
-    const rect = canvas.getBoundingClientRect();
-    const mouseX = event.clientX - rect.left;
-    const mouseY = event.clientY - rect.top;
+function mouseDown(x = null, y = null, event = null) {
+    let mouseX;
+    let mouseY;
+    if (event) {
+        const rect = canvas.getBoundingClientRect();
+        mouseX = event.clientX - rect.left;
+        mouseY = event.clientY - rect.top;
+    }
+    else {
+        mouseX = x;
+        mouseY = y;
+    }
+
 
     board.forEach(element => {
         if (element.isPointIn(mouseX - offsetX, mouseY - offsetY)) {
