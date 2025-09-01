@@ -6,3 +6,12 @@ body {
     width: 100%;
     overflow: hidden;
 }
+
+canvas{
+    cursor: pointer;
+    touch-action: none; /* Предотвращает скролл при касании */
+    -webkit-user-select: auto;
+    user-select: none; /* Предотвращает выделение */
+    background-color: white; /* Иногда помогает с рендерингом в Safari */
+    display: block; /* Важно для корректного отображения */
+}
